@@ -1,0 +1,13 @@
+{
+  "name": "smash-fest-server",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {
+
+  }
+}
