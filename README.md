@@ -11,25 +11,27 @@ message[playerId1].state
 message[playerId2].state
 
 ## online
-message is player id
+message.source = player id
 
 ## offline
-message is player id
+message.source = player id
 
 
 ## update
-message.id - player id
-message.state - player state
+message.source = source player id
+message.state = source player state
 
 
 ## hit
-object with hit info
-and .sourceId
+message.source = source player id
+message.options = hit options
+
 
 # Outgoing
 
 ## hit
-object with hit information and .targetId
+message.target = message target
+message.options = hit options
 
 ## update
-state
+message.state = player state

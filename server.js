@@ -9,41 +9,29 @@ const sockets = {};
 const players = {};
 
 io.sockets.on('connection', function (socket) {
-  const playerId = socket.handshake.query.playerId;
-  if (!playerId) return socket.disconnect();
-  socket.playerId = playerId;
-
-  players[playerId] = { 
-    state: {},
-    source: playerId 
-  };
-
-  sockets[playerId] = socket;
+  const id = socket.handshake.query.id;
+  if (!id) return socket.disconnect();
+  players[id] = { state: {}, source: id };
+  sockets[id] = socket;
   
   socket.on('disconnect', () => {
-    delete sockets[socket.playerId];
-    delete players[socket.playerId];
-    io.emit('offline', playerId);
+    delete sockets[id];
+    delete players[id];
+    io.emit('offline', id);
   });
 
-  socket.on('update', state => {
-    if (!players[playerId]) return;
-    players[playerId].state = state;
-    io.emit('update', { 
-      source: playerId, 
-      state: state 
-    });
+  socket.on('update', message => {
+    if (!players[id] || !message.state) return;
+    players[id].state = message.state;
+    io.emit('update', { source: id, state: message.state });
   });
 
   socket.on('hit', message => {
     if (!message || !message.target || !sockets[message.target]) return;
-    sockets[message.target].emit('hit', { 
-      source: playerId,
-      options: message.options
-    });
+    sockets[message.target].emit('hit', { source: id, options: message.options });
   });
 
-  io.emit('online', playerId);
+  io.emit('online', id);
   socket.emit('sync', players);
 
   return null;
