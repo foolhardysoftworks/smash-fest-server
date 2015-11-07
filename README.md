@@ -23,16 +23,13 @@ message.state - player state
 
 
 ## hit
-hit.target - target player id
-hit.source - source player id
+source player id
 
 
 # Outgoing
 
 ## hit
-hit.target
-hit.source
-
+target player id
 
 ## update
-message is state
+state

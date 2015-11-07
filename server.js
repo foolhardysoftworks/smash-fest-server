@@ -26,9 +26,9 @@ io.sockets.on('connection', function (socket) {
     io.emit('update', { id: socket.playerId, state: state });
   });
 
-  socket.on('hit', hit => {
-    if (!sockets[hit.target]) return;
-    sockets[hit.target].emit('hit', hit);
+  socket.on('hit', targetId => {
+    if (!sockets[targetId]) return;
+    sockets[targetId].emit('hit', socket.playerId);
   });
 
   io.emit('online', socket.playerId);
