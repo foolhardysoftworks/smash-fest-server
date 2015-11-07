@@ -12,32 +12,40 @@ io.sockets.on('connection', function (socket) {
   const playerId = socket.handshake.query.playerId;
   if (!playerId) return socket.disconnect();
   socket.playerId = playerId;
-  players[playerId] = { state: {}, id: playerId };
+
+  players[playerId] = { 
+    state: {},
+    source: playerId 
+  };
+
+  sockets[playerId] = socket;
   
   socket.on('disconnect', () => {
     delete sockets[socket.playerId];
     delete players[socket.playerId];
-    io.emit('offline', socket.playerId);
+    io.emit('offline', playerId);
   });
 
   socket.on('update', state => {
-    if (!players[socket.playerId]) return;
-    players[socket.playerId].state = state;
-    io.emit('update', { id: socket.playerId, state: state });
+    if (!players[playerId]) return;
+    players[playerId].state = state;
+    io.emit('update', { 
+      source: playerId, 
+      state: state 
+    });
   });
 
-  socket.on('hit', targetId => {
-    if (!sockets[targetId]) return;
-    sockets[targetId].emit('hit', socket.playerId);
+  socket.on('hit', message => {
+    if (!message || !message.target || !sockets[message.target]) return;
+    sockets[message.target].emit('hit', { 
+      source: playerId,
+      options: message.options
+    });
   });
 
-  io.emit('online', socket.playerId);
+  io.emit('online', playerId);
   socket.emit('sync', players);
 
   return null;
 
 });
-
-
-
-

@@ -23,13 +23,13 @@ message.state - player state
 
 
 ## hit
-source player id
-
+object with hit info
+and .sourceId
 
 # Outgoing
 
 ## hit
-target player id
+object with hit information and .targetId
 
 ## update
 state
